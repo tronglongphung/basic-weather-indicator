@@ -1,7 +1,7 @@
 const searchFormEl = document.querySelector("#searchForm");
 const cityNameEl = document.querySelector("#cityName");
 const cityHeaderEl = document.querySelector("#cityHeader");
-// const iconEl = document.querySelector("#icon");
+const iconEl = document.querySelector("#icon");
 const API_KEY = "4c0d1ff88d39495632646a9e2c21be66";
 
 const formSubmitHandler = (event) => {
@@ -11,7 +11,7 @@ const formSubmitHandler = (event) => {
 
   if (cityName) {
     getCity(cityName);
-
+    // forecastData(cityName);
     cityHeaderEl.textContent = "";
     cityNameEl.value = "";
   } else {
@@ -19,7 +19,7 @@ const formSubmitHandler = (event) => {
   }
 };
 
-const getCity = function (city) {
+const getCity = (city) => {
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`;
 
   fetch(apiUrl)
@@ -62,21 +62,43 @@ function getCoordincate(lat, lon) {
     });
 }
 
-var displayCityData = function (data) {
+const displayCityData = function (data) {
   if (data.length === 0) {
     repoContainerEl.textContent = "No datas found.";
     return;
   }
-  //   var dataIcon = data.weather[0].icon;
-  //   var iconUrl = `https://openweathermap.org/img/wn/"${dataIcon}"@2x.png`;
+  var dataIcon = data.weather[0].icon;
+  console.log(dataIcon);
+  var iconUrl = `https://openweathermap.org/img/wn/${dataIcon}.png`;
+  $("#icon").html("<img src=" + iconUrl + ">");
   cityHeaderEl.innerHTML = `${data.name}, ${dayjs().format("D MMM YY")}`;
-
   document.querySelector("#temperature").innerHTML = data.main.temp + "&deg;C";
   document.querySelector("#humidity").innerHTML = data.main.humidity + "%";
   document.querySelector("#windspeed").innerHTML = data.wind.speed + "kph";
 };
 
-// // forecast
-// api.openweathermap.org/data/2.5/forecast?q={city name}&appid=4c0d1ff88d39495632646a9e2c21be66
+// const forecastData = function (city) {
+//   var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?id=${city}"&appid="${API_KEY}`;
+//   $.ajax({
+//     url: apiUrl,
+//     method: "GET",
+//   }).then(function (response) {
+//     for (i = 0; i < 5; i++) {
+//       var date = new Date(
+//         response.list[(i + 1) * 8 - 1].dt * 1000
+//       ).toLocaleDateString();
+//       var iconcode = response.list[(i + 1) * 8 - 1].weather[0].icon;
+//       var iconurl = "https://openweathermap.org/img/wn/" + iconcode + ".png";
+//       var tempK = response.list[(i + 1) * 8 - 1].main.temp;
+//       var tempF = ((tempK - 273.5) * 1.8 + 32).toFixed(2);
+//       var humidity = response.list[(i + 1) * 8 - 1].main.humidity;
+
+//       $("#fDate" + i).html(date);
+//       $("#fImg" + i).html("<img src=" + iconurl + ">");
+//       $("#fTemp" + i).html(tempF + "&#8457");
+//       $("#fHumidity" + i).html(humidity + "%");
+//     }
+//   });
+// };
 
 searchFormEl.addEventListener("submit", formSubmitHandler);
